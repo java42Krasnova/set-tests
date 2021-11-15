@@ -43,12 +43,12 @@ class SetTests<T> {
 	//TODO
 	//Done!!
 	void iteratorTreeSetTest() {
-		Set<T> emptySet = new TreeSet<>();
-		Iterator itEmpty = emptySet.iterator();
-		while(itEmpty.hasNext())
-		{
-			System.out.println(itEmpty.next());
-		}
+	//	Set<T> emptySet = new TreeSet<>();
+//		Iterator itEmpty = emptySet.iterator();
+//		while(itEmpty.hasNext())
+//		{
+//			System.out.println(itEmpty.next());
+//		}
 	Integer[] exp = { 10, 20, 40, 60 };
 	assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
 	set.add(-80);
@@ -63,6 +63,17 @@ class SetTests<T> {
 		{
 			System.out.println(iterator.next());
 		}
+		System.out.println("++++++++++++++");
+		Set<Integer> tmpSet = new TreeSet<>();
+		tmpSet.add(100);
+		tmpSet.add(4);
+		tmpSet.add(-18);
+		tmpSet.add(74);
+		tmpSet.add(-34);
+		tmpSet.add(204);
+	Integer[] exp2= {-34, -18, 4, 74, 100, 204};
+	assertArrayEquals(exp2, getArrayFromSet((Set<T>) tmpSet));
+			
 	}
 
 	@SuppressWarnings("unchecked")
