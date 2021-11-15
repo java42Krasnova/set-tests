@@ -73,7 +73,11 @@ class SetTests<T> {
 		tmpSet.add(204);
 	Integer[] exp2= {-34, -18, 4, 74, 100, 204};
 	assertArrayEquals(exp2, getArrayFromSet((Set<T>) tmpSet));
-			
+	Iterator<Integer> it = tmpSet.iterator();
+	while(it.hasNext())
+	{
+		System.out.println(it.next());
+	}
 	}
 
 	@SuppressWarnings("unchecked")
