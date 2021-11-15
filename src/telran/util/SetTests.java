@@ -43,19 +43,26 @@ class SetTests<T> {
 	//TODO
 	//Done!!
 	void iteratorTreeSetTest() {
-		Integer[] exp = { 10, 20, 40, 60 };
-		assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
-		int ind = 0;
-		set.add(-80);
-		set.add(55);
-		set.add(100);
-		set.add(-100);
-		Iterator<Integer> iterator = set.iterator();
-		Integer[] exp2 = { -100, -80, 10, 20, 40, 55, 60, 100 };
-		while (iterator.hasNext()) {
-			assertEquals(exp2[ind++], iterator.next());
+		Set<T> emptySet = new TreeSet<>();
+		Iterator itEmpty = emptySet.iterator();
+		while(itEmpty.hasNext())
+		{
+			System.out.println(itEmpty.next());
 		}
-		
+	Integer[] exp = { 10, 20, 40, 60 };
+	assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
+	set.add(-80);
+	set.add(55);
+	set.add(60);
+	set.add(-100);
+	set.add(100);
+	set.add(90);
+	set.add(115);
+		Iterator<Integer> iterator = set.iterator();
+		while(iterator.hasNext())
+		{
+			System.out.println(iterator.next());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
