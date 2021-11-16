@@ -2,6 +2,7 @@ package telran.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,27 +44,18 @@ class SetTests<T> {
 	//TODO
 	//Done!!
 	void iteratorTreeSetTest() {
-	//	Set<T> emptySet = new TreeSet<>();
-//		Iterator itEmpty = emptySet.iterator();
-//		while(itEmpty.hasNext())
-//		{
-//			System.out.println(itEmpty.next());
-//		}
-	Integer[] exp = { 10, 20, 40, 60 };
-	assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
-	set.add(-80);
-	set.add(55);
-	set.add(60);
-	set.add(-100);
-	set.add(100);
-	set.add(90);
-	set.add(115);
-		Iterator<Integer> iterator = set.iterator();
-		while(iterator.hasNext())
-		{
-			System.out.println(iterator.next());
+		String strings[] = {"Boris",  "Asaf", "android", "band"};
+		Set<String> strSet = new TreeSet<>((a,b)-> a.compareToIgnoreCase(b));
+		for (String str : strings) {
+			strSet.add(str);
 		}
-		System.out.println("++++++++++++++");
+		String expected[] = {"android","Asaf", "band", "Boris"};
+		Arrays.sort(expected,(a,b)-> a.compareToIgnoreCase(b));
+		
+		assertArrayEquals(expected, getArrayFromSet((Set<T>) strSet));
+		Integer[] exp = { 10, 20, 40, 60 };
+		Arrays.sort(exp);
+		assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
 		Set<Integer> tmpSet = new TreeSet<>();
 		tmpSet.add(100);
 		tmpSet.add(4);
@@ -71,20 +63,15 @@ class SetTests<T> {
 		tmpSet.add(74);
 		tmpSet.add(-34);
 		tmpSet.add(204);
+
 	Integer[] exp2= {-34, -18, 4, 74, 100, 204};
 	assertArrayEquals(exp2, getArrayFromSet((Set<T>) tmpSet));
-	Iterator<Integer> it = tmpSet.iterator();
-	while(it.hasNext())
-	{
-		System.out.println(it.next());
-	}
 	}
 
 	@SuppressWarnings("unchecked")
 	private T[] getArrayFromSet(Set<T> set) {
-		int size = set.size();
 		int ind = 0;
-		T[] res = (T[]) new Object[size];
+		T[] res = (T[]) new Object[set.size()];
 		for (T obj : set) {
 			res[ind++] = obj;
 		}
