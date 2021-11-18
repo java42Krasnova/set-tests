@@ -4,12 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SetTests<T> {
-	Integer[] initialNumbers = { 10, 20, 40, 60 };
+class SetTests {
+	private static final int N_RANDOM_NUMBERS = 1000;
+	Integer[] initialNumbers = { 10, 20, 40, 60, 5, 25, 3, 2, 4, 1 };
 	Set<Integer> set;
 
 	@BeforeEach
@@ -19,9 +21,92 @@ class SetTests<T> {
 	}
 
 	private void fillSet() {
-		for (Integer num : initialNumbers) {
-			set.add(num);
+		fillSetFromArray(set, initialNumbers);
+	}
+
+	@Test
+	void removeRoot() {
+		Integer expected[] = { 1, 2, 3, 4, 5, 20, 25, 40, 60 };
+		set.remove(10);
+
+		assertArrayEquals(expected, getArrayFromSet(set));
+
+	}
+
+	@Test
+	void removeJunction() {
+		Integer expected[] = { 1, 2, 4, 5, 10, 20, 25, 40, 60 };
+		set.remove(3);
+
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+
+	@Test
+	void removeList() {
+		Integer expected[] = { 2, 3, 4, 5, 10, 20, 25, 40, 60 };
+		set.remove(1);
+		assertArrayEquals(expected, getArrayFromSet(set));
+
+	}
+
+	@Test
+	void removeNonJunctionRight() {
+		Integer expected[] = { 1, 2, 3, 4, 5, 10, 25, 40, 60 };
+		set.remove(20);
+		assertArrayEquals(expected, getArrayFromSet(set));
+
+	}
+
+	@Test
+	void removeNonJunctionLeft() {
+		Integer expected[] = { 1, 2, 3, 4, 10, 20, 25, 40, 60 };
+		set.remove(5);
+		assertArrayEquals(expected, getArrayFromSet(set));
+
+	}
+
+	@Test
+	void removeIf() {
+		Integer randomNumbers[] = getRandomNumbers();
+		Set<Integer> setNumbers = new TreeSet<>();
+		fillSetFromArray(setNumbers, randomNumbers);
+		setNumbers.removeIf(n -> n%2 == 0);
+		for( Integer num :setNumbers)
+		{
+			assertFalse(num % 2 == 0);
 		}
+	}
+
+	@Test
+	void iteratorRemoveTest() {
+//			10, 20, 40, 60, 5, 25, 3, 2, 4, 1
+		Iterator<Integer> it = set.iterator();
+		System.out.println("________");
+		while (it.hasNext()) {
+			if (it.next() % 5 == 0) {
+				it.remove();
+			}
+		}
+		for(Integer i:set)
+		{
+			System.out.println(i);
+		}
+		
+	}
+
+	private <T> void fillSetFromArray(Set<T> res, T[] array) {
+		for (T num : array) {
+			res.add(num);
+		}
+	}
+
+	private Integer[] getRandomNumbers() {
+		Integer[] res = new Integer[N_RANDOM_NUMBERS];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = (int) (Math.random() * Integer.MAX_VALUE);
+		}
+		return res;
+
 	}
 
 	@Test
@@ -29,49 +114,40 @@ class SetTests<T> {
 		assertEquals(initialNumbers.length, set.size());
 		for (Integer num : initialNumbers) {
 			assertTrue(set.contains(num));
-			}
+		}
 		assertTrue(set.add(80));
 		assertFalse(set.add(80));
+
 	}
-	
+
 	@Test
 	void containsTest() {
 		assertTrue(set.contains(60));
 		assertFalse(set.contains(80));
 	}
-	
-	@Test
-	//TODO
-	//Done!!
-	void iteratorTreeSetTest() {
-		String strings[] = {"Boris",  "Asaf", "android", "band"};
-		Set<String> strSet = new TreeSet<>((a,b)-> a.compareToIgnoreCase(b));
-		for (String str : strings) {
-			strSet.add(str);
-		}
-		String expected[] = {"android","Asaf", "band", "Boris"};
-		Arrays.sort(expected,(a,b)-> a.compareToIgnoreCase(b));
-		
-		assertArrayEquals(expected, getArrayFromSet((Set<T>) strSet));
-		Integer[] exp = { 10, 20, 40, 60 };
-		Arrays.sort(exp);
-		assertArrayEquals(exp, getArrayFromSet((Set<T>) set));
-		Set<Integer> tmpSet = new TreeSet<>();
-		tmpSet.add(100);
-		tmpSet.add(4);
-		tmpSet.add(-18);
-		tmpSet.add(74);
-		tmpSet.add(-34);
-		tmpSet.add(204);
 
-	Integer[] exp2= {-34, -18, 4, 74, 100, 204};
-	assertArrayEquals(exp2, getArrayFromSet((Set<T>) tmpSet));
+	@Test
+	void iteratorNoRemoveTest() {
+		Integer[] randomNumbers = getRandomNumbers();
+		Set<Integer> numbersSet = new TreeSet<>();
+		fillSetFromArray(numbersSet, randomNumbers);
+		Arrays.sort(randomNumbers);
+		assertArrayEquals(randomNumbers, getArrayFromSet(numbersSet));
+	}
+
+	@Test
+	void treeSetInsensitiveOrderTest() {
+		String strings[] = { "Boris", "Asaf", "android", "band" };
+		String expected[] = { "android", "Asaf", "band", "Boris" };
+		TreeSet<String> treeSet = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		fillSetFromArray(treeSet, strings);
+		assertArrayEquals(expected, getArrayFromSet(treeSet));
 	}
 
 	@SuppressWarnings("unchecked")
-	private T[] getArrayFromSet(Set<T> set) {
+	private <T> T[] getArrayFromSet(Set<T> set) {
+		T res[] = (T[]) new Object[set.size()];
 		int ind = 0;
-		T[] res = (T[]) new Object[set.size()];
 		for (T obj : set) {
 			res[ind++] = obj;
 		}
