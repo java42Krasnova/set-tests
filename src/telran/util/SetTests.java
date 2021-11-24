@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,9 @@ Integer[] initialNumbers = {
 Set<Integer> set;
 	@BeforeEach
 	void setUp() throws Exception {
-		set = new HashSet<>(3);
+		//set = new HashSet<>(3);
 
-		//set = new TreeSet<>();
+		set = new TreeSet<>();
 		fillSet();
 	}
 
@@ -71,8 +73,8 @@ Set<Integer> set;
 	@Test
 	void removeIfTest() {
 		Integer randomNumbers[] = getRandomNumbers();
-		Set<Integer> setNumbers = new HashSet<>();
-		//Set<Integer> setNumbers = new TreeSet<>();
+		//Set<Integer> setNumbers = new HashSet<>();
+		Set<Integer> setNumbers = new TreeSet<>();
 		fillSetFromArray(setNumbers, randomNumbers);
 		setNumbers.removeIf(n -> n % 2 == 0);
 		for(Integer num: setNumbers) {
@@ -115,8 +117,8 @@ Set<Integer> set;
 	@Test
 	void iteratorNoRemoveTest() {
 		Integer[] randomNumbers = getRandomNumbers();
-		Set<Integer> numbersSet = new HashSet<>();
-		//Set<Integer> numbersSet = new TreeSet<>();
+		//Set<Integer> numbersSet = new HashSet<>();
+		Set<Integer> numbersSet = new TreeSet<>();
 		fillSetFromArray(numbersSet, randomNumbers);
 		Arrays.sort(randomNumbers);
 		assertArrayEquals(randomNumbers, getArrayFromSet(numbersSet));
@@ -152,5 +154,41 @@ Set<Integer> set;
 			assertTrue(set.contains(expected[i]));
 		}
 	}
+	@Test
+	void testNextException() {
+		Iterator<Integer> it = set.iterator();
+		while(it.hasNext()) {
+			it.next();
+			}
+		try {
+			it.next();
+			fail("There shoud be thrown exception");
+		} catch (NoSuchElementException e) {
+		
+		} catch (Exception e) {
+			fail("There shoud be thrown NoSuchElementException");
+		}
+	}
+	
+	@Test
+	void testREmoveNoNext(){
+		Iterator<Integer> it = set.iterator();
+		it.next();
+		it.next();
+		it.remove();
+		exceptionRemoveTest(it);
+		it = set.iterator();
+		exceptionRemoveTest(it);
+	}
 
+	private void exceptionRemoveTest(Iterator<Integer> it) {
+		try {
+			it.remove();
+			fail("there should be thrown Exception");
+		} catch (IllegalStateException e) {
+			
+		} catch (Exception e) {
+			fail("there should be thrown illegalStateException ");
+		}		
+	}
 }
